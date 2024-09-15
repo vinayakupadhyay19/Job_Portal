@@ -3,6 +3,7 @@ import dotenv from "dotenv";
 import colors from "colors";
 import db from "./config/db.js";
 import testRoute from "./routes/testRoute.js";
+import authRoute from "./routes/authRoute.js";
 import cors from "cors";
 import morgan from "morgan";
 
@@ -21,6 +22,7 @@ app.get("/", (req, res) => {
   res.send("API Running...");
 });
 app.use("/api/v1/test", testRoute);
+app.use("/api/v1", authRoute);
 
 const PORT = process.env.PORT || 3003;
 app.listen(PORT, () => {
