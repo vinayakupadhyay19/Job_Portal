@@ -2,6 +2,9 @@ import express from "express";
 import dotenv from "dotenv";
 import colors from "colors";
 import db from "./config/db.js";
+import testRoute from "./routes/testRoute.js";
+import cors from "cors";
+import morgan from "morgan";
 
 //DOT Env Config
 dotenv.config();
@@ -11,12 +14,13 @@ db();
 
 //rest opject
 const app = express();
-
 app.use(express.json());
-
+app.use(cors());
+app.use(morgan("tiny"));
 app.get("/", (req, res) => {
-  res.send("<h1>Hello Job Portal, Vinayak is here..to learn Node.js</h1>");
+  res.send("API Running...");
 });
+app.use("/api/v1/test", testRoute);
 
 const PORT = process.env.PORT || 3003;
 app.listen(PORT, () => {
