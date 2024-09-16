@@ -14,13 +14,14 @@ const userSchema = new mongoose.Schema(
     },
     email: {
       type: String,
-      required: [true, "Last name is required"],
+      required: [true, "email is required"],
       unique: true,
       validate: validator.isEmail,
     },
     password: {
       type: String,
       required: [true, "Password is required"],
+      minlength: [6, "Password must be at least 6 character long"],
     },
     location: {
       type: String,
