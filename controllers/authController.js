@@ -2,13 +2,22 @@ import bcrypt from "bcrypt";
 import User from "../models/userModels.js";
 import { response } from "express";
 
-export const authController = async (req, res) => {
+export const authController = async (req, res, next) => {
   try {
     const { name, lastName, email, password, location } = req.body;
+
+    if (!name) {
+      next("Name is required in request body");
+    }
+    if (!email) {
+      next("Email is required in request body");
+    }
+    if (!password) {
+      next("Password is required in request body");
+    }
+
     if (password.length < 6) {
-      return res
-        .status(400)
-        .json({ message: "Password must be at least 6 characters long" });
+      next("Password must be at least 6 characters long");
     }
     const newUser = new User({
       name: name,
@@ -20,8 +29,9 @@ export const authController = async (req, res) => {
 
     const userExist = await User.findOne({ email: email });
     if (userExist) {
-      res.status(200).json({ message: "User already exists" });
-      return;
+      next("User already exists.");
+      //res.status(err.status || 500).json({ message: "User already exists." });
+      //return;
     }
 
     await newUser.save();
@@ -29,8 +39,9 @@ export const authController = async (req, res) => {
       .status(201)
       .json({ message: "User created successfully", User: newUser });
   } catch (e) {
-    console.error();
-    res.status(500).json({ error: e.message, Url: "/api/v1" + req.url });
+    // console.error();
+    //res.status(500).json({ error: e.message, Url: "/api/v1" + req.url });
+    next(e);
   }
   return;
 };
